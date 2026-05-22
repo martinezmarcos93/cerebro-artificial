@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(New-Item *)",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Usuario Contable\\\\Desktop\\\\Codigo\\\\segundo_cerebro\" -File | Select-Object Name, Extension, LastWriteTime, @{N='KB';E={[math]::Round\\($_.Length/1KB,1\\)}})",
+      "Bash(python -m pytest tests/test_fase4.py -v)",
+      "Bash(pip install *)",
+      "Bash(python -m pytest tests/ -v --tb=short)"
+    ]
+  }
+}

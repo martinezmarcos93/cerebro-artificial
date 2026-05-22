@@ -1,0 +1,8 @@
+python-frontmatter==1.0.1
+pyyaml
+networkx
+pytest
+watchdog
+streamlit
+matplotlib
+pandas

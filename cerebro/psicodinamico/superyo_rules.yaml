@@ -1,0 +1,15 @@
+# Reglas restrictivas del Superyó
+# Cuando una de estas reglas se viola al proponer un enlace, el Yo interviene y crea un conflicto.
+
+reglas:
+  - nombre: "no_autoenlace"
+    descripcion: "Una neurona no puede enlazarse a sí misma. Crearía un bucle tautológico sin valor semántico."
+    tipo: "estructura"
+
+  - nombre: "no_contradiccion_directa"
+    descripcion: "No se puede enlazar un concepto que figura en los significados_diferenciales (contradicción ontológica directa)."
+    tipo: "semantica"
+
+  - nombre: "no_enlace_existente"
+    descripcion: "No se puede volver a enlazar dos conceptos que ya están conectados. El enlace duplicado no aporta información nueva."
+    tipo: "estructura"
