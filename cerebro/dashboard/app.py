@@ -42,7 +42,8 @@ if auto_refresh:
 st.sidebar.markdown("---")
 vista = st.sidebar.radio(
     "Vista",
-    ["Resumen", "Neuronas", "Grafo de Conocimiento", "Log del Yo", "Arquetipos"],
+    ["Resumen", "Neuronas", "Grafo de Conocimiento", "Log del Yo", "Arquetipos",
+     "Perfil Cognitivo", "Entrenamiento"],
 )
 
 # ---------------------------------------------------------------------------
@@ -284,3 +285,226 @@ elif vista == "Arquetipos":
             tipo = n.post.metadata.get("tipo", "?")
             energia = n.post.metadata.get("estado_energetico", 0)
             st.markdown(f"- **{sig}** *(tipo: {tipo}, energia: {energia:.2f})*")
+
+# ---------------------------------------------------------------------------
+# Vista: Perfil Cognitivo
+# ---------------------------------------------------------------------------
+elif vista == "Perfil Cognitivo":
+    import yaml as _yaml
+    from cerebro.perfil.perfil_cognitivo import PerfilCognitivo, EJES
+
+    st.title("Perfil Cognitivo")
+    st.caption("Define las tensiones evolutivas del cerebro. No es un objetivo fijo: "
+               "es un conjunto de intensidades que inclina qué conocimiento acepta, "
+               "qué enlaces favorece y qué arquetipos predominan.")
+
+    perfil_path = os.path.join(vault_path, "perfil_cognitivo.yaml")
+    perfil = PerfilCognitivo(path=perfil_path)
+
+    # Presets
+    st.subheader("Semillas cognitivas")
+    presets_path = os.path.join(ROOT, "cerebro", "perfil", "perfiles_base.yaml")
+    with open(presets_path, encoding="utf-8") as _f:
+        presets = _yaml.safe_load(_f)
+
+    cols_preset = st.columns(len(presets))
+    for col, (nombre, valores) in zip(cols_preset, presets.items()):
+        if col.button(nombre.capitalize()):
+            perfil = PerfilCognitivo(valores=valores)
+            perfil.guardar(perfil_path)
+            st.success(f"Semilla '{nombre}' aplicada y guardada.")
+            st.rerun()
+
+    st.markdown("---")
+
+    # Sliders
+    st.subheader("Ajuste manual de ejes")
+    descripciones = {
+        "abstraccion":    "Pensamiento simbolico y conceptual",
+        "adaptabilidad":  "Plasticidad ante contradicciones",
+        "dominio_social": "Lectura de agentes y relaciones",
+        "exploracion":    "Curiosidad y expansion semantica",
+        "estabilidad":    "Coherencia interna y baja entropia",
+        "creatividad":    "Conexiones improbables",
+        "supervivencia":  "Priorizacion de amenazas",
+        "trascendencia":  "Metacognicion y sintesis",
+        "especializacion":"Profundidad tematica",
+        "integracion":    "Conexion entre dominios",
+    }
+
+    nuevos_valores = {}
+    col_a, col_b = st.columns(2)
+    for i, eje in enumerate(EJES):
+        col = col_a if i % 2 == 0 else col_b
+        nuevos_valores[eje] = col.slider(
+            f"{eje.capitalize()} — {descripciones.get(eje, '')}",
+            min_value=0.0, max_value=1.0,
+            value=float(perfil.valores.get(eje, 0.5)),
+            step=0.05, key=f"slider_{eje}",
+        )
+
+    if st.button("Guardar perfil", type="primary"):
+        perfil_nuevo = PerfilCognitivo(valores=nuevos_valores)
+        perfil_nuevo.guardar(perfil_path)
+        st.success("Perfil guardado en vault/perfil_cognitivo.yaml")
+        st.rerun()
+
+    # Radar chart
+    st.markdown("---")
+    st.subheader("ADN cognitivo")
+    try:
+        import matplotlib.pyplot as plt
+        import numpy as np
+
+        ejes_labels = [e.capitalize() for e in EJES]
+        valores_radar = [nuevos_valores.get(e, 0.5) for e in EJES]
+        N = len(EJES)
+        angulos = [n / float(N) * 2 * np.pi for n in range(N)]
+        angulos += angulos[:1]
+        valores_radar += valores_radar[:1]
+
+        fig_r, ax_r = plt.subplots(figsize=(5, 5), subplot_kw=dict(polar=True))
+        ax_r.set_facecolor("#0e1117")
+        fig_r.patch.set_facecolor("#0e1117")
+        ax_r.plot(angulos, valores_radar, "o-", linewidth=2, color="#4FC3F7")
+        ax_r.fill(angulos, valores_radar, alpha=0.25, color="#4FC3F7")
+        ax_r.set_xticks(angulos[:-1])
+        ax_r.set_xticklabels(ejes_labels, size=8, color="white")
+        ax_r.set_ylim(0, 1)
+        ax_r.set_yticks([0.25, 0.5, 0.75, 1.0])
+        ax_r.set_yticklabels(["0.25", "0.5", "0.75", "1.0"], size=6, color="gray")
+        ax_r.tick_params(colors="white")
+        ax_r.spines["polar"].set_color("gray")
+        ax_r.grid(color="gray", alpha=0.3)
+        st.pyplot(fig_r)
+        plt.close(fig_r)
+    except ImportError:
+        st.info("Instala matplotlib para ver el radar chart.")
+
+    st.caption(f"Eje dominante: **{perfil.eje_dominante()}** | "
+               f"Eje debil: **{perfil.eje_debil()}**")
+
+# ---------------------------------------------------------------------------
+# Vista: Entrenamiento
+# ---------------------------------------------------------------------------
+elif vista == "Entrenamiento":
+    from cerebro.perfil.perfil_cognitivo import PerfilCognitivo
+    from cerebro.pedagogy.curriculo import CurriculoDinamico
+    from cerebro.pedagogy.unidad_pedagogica import (
+        TipoTransformacion, DESCRIPCIONES_TRANSFORMACION,
+        TRANSFORMACION_ETAPA_MINIMA,
+    )
+
+    st.title("Entrenamiento Cognitivo")
+
+    perfil_path = os.path.join(vault_path, "perfil_cognitivo.yaml")
+    perfil = PerfilCognitivo(path=perfil_path)
+
+    # --- Sección 1: Etapa actual ---
+    st.subheader("Etapa actual")
+
+    etapa_nombres = {
+        "sensoriomotora":        "Sensoriomotora",
+        "preoperacional":        "Preoperacional",
+        "operaciones_concretas": "Operaciones Concretas",
+        "operaciones_formales":  "Operaciones Formales",
+    }
+
+    CAPACIDADES = {
+        "sensoriomotora": {
+            "desbloqueadas": ["Esquemas de accion", "Registro de interacciones"],
+            "bloqueadas":    ["Simbolos", "Conflictos", "Categorias", "Hipotesis abstractas"],
+            "para_evolucionar": "Necesita 3 interacciones para pasar a Preoperacional.",
+        },
+        "preoperacional": {
+            "desbloqueadas": ["Simbolos", "Primeros enlaces", "Motor psicodinamico", "Arquetipos"],
+            "bloqueadas":    ["Categorias jerarquicas", "Hipotesis abstractas", "Metacognicion"],
+            "para_evolucionar": f"Necesita {perfil.umbral_conflictos()} conflicto(s) para pasar a Operaciones Concretas.",
+        },
+        "operaciones_concretas": {
+            "desbloqueadas": ["Conceptos", "Jerarquias es_un / tiene", "Taxonomias"],
+            "bloqueadas":    ["Hipotesis abstractas", "Paradojas", "Metacognicion"],
+            "para_evolucionar": f"Necesita {perfil.umbral_conceptos()} concepto(s) para pasar a Operaciones Formales.",
+        },
+        "operaciones_formales": {
+            "desbloqueadas": ["Hipotesis", "Razonamiento abstracto", "Paradojas", "Metacognicion"],
+            "bloqueadas":    [],
+            "para_evolucionar": "Etapa maxima alcanzada. El desarrollo es ahora en profundidad.",
+        },
+    }
+
+    curriculo = CurriculoDinamico(vault_path, perfil=perfil)
+    reporte = curriculo.analizar()
+    etapa_key = reporte.etapa_actual
+    cap = CAPACIDADES.get(etapa_key, CAPACIDADES["sensoriomotora"])
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric("Etapa", etapa_nombres.get(etapa_key, etapa_key))
+        st.metric("Neuronas en vault", reporte.total_neuronas)
+    with col2:
+        st.metric("Conflictos", reporte.por_tipo.get("conflicto", 0))
+        st.metric("Conceptos", reporte.por_tipo.get("concepto", 0))
+
+    colA, colB = st.columns(2)
+    with colA:
+        st.markdown("**Capacidades desbloqueadas:**")
+        for c in cap["desbloqueadas"]:
+            st.markdown(f"- {c}")
+    with colB:
+        st.markdown("**Capacidades bloqueadas:**")
+        for c in cap["bloqueadas"]:
+            st.markdown(f"- ~~{c}~~")
+
+    st.info(cap["para_evolucionar"])
+
+    # --- Sección 2: Necesidades emergentes ---
+    if reporte.necesidades_emergentes:
+        st.subheader("Lo que el cerebro pide")
+        for n_emerg in reporte.necesidades_emergentes:
+            st.warning(n_emerg)
+
+    # --- Sección 3: Recomendaciones del currículo ---
+    st.subheader("Que ensenarle ahora")
+    if not reporte.recomendaciones:
+        st.success("El cerebro esta bien alimentado segun su perfil. Seguí explorando libremente.")
+    else:
+        for rec in reporte.recomendaciones:
+            urgencia_color = "red" if rec.urgencia > 0.8 else "orange" if rec.urgencia > 0.6 else "blue"
+            with st.expander(
+                f"[{rec.tipo.upper()}] — urgencia: {rec.urgencia:.0%}", expanded=rec.urgencia > 0.7
+            ):
+                st.markdown(f"**Por que:** {rec.razon}")
+                if rec.ejemplos:
+                    st.markdown("**Ejemplos de estimulos:**")
+                    for ej in rec.ejemplos:
+                        st.code(f"python main.py interactuar --accion {ej.accion} --objeto {ej.objeto}")
+
+    # --- Sección 4: Enviar estímulo ahora ---
+    st.markdown("---")
+    st.subheader("Enviar estimulo")
+
+    with st.form("estimulo_form"):
+        col_a, col_b, col_c = st.columns(3)
+        accion_in = col_a.text_input("Accion", placeholder="nutrir")
+        objeto_in = col_b.text_input("Objeto", placeholder="bebe")
+        tipo_transf = col_c.selectbox(
+            "Tipo de transformacion",
+            TipoTransformacion.TODOS,
+            format_func=lambda t: f"{t} — {DESCRIPCIONES_TRANSFORMACION.get(t, '')[:40]}",
+        )
+        submitted = st.form_submit_button("Enviar al cerebro", type="primary")
+
+    if submitted and accion_in and objeto_in:
+        from cerebro.core.cerebro import Cerebro as _Cerebro
+        _c = _Cerebro(vault_path=vault_path)
+        try:
+            _c.interactuar(accion_in, objeto_in)
+            st.success(f"Estimulo enviado: {accion_in}_{objeto_in} "
+                       f"(transformacion: {tipo_transf})")
+            st.cache_data.clear()
+            st.rerun()
+        except Exception as exc:
+            st.error(f"Error: {exc}")
+    elif submitted:
+        st.warning("Completá accion y objeto antes de enviar.")

@@ -84,21 +84,25 @@ class MotorJunguiano:
         palabras_neurona = {w.strip(".,;:!?()[]") for w in texto.split() if len(w) > 2}
         return len(palabras_neurona & vocabulario)
 
-    def clasificar(self, neurona: Neurona) -> str:
+    def clasificar(self, neurona: Neurona, perfil=None) -> str:
         """
         Devuelve el nombre del arquetipo más afín.
+        Si se pasa un PerfilCognitivo, amplifica los scores según sus ejes.
         Si no hay match, devuelve "self" (integrador por defecto).
         """
         scores = {}
         for nombre in VOCABULARIO_ARQUETIPOS:
             vocab = self._vocabulario_de(nombre)
-            scores[nombre] = self._score(neurona, vocab)
+            base = self._score(neurona, vocab)
+            if perfil is not None:
+                base *= perfil.peso_arquetipo(nombre)
+            scores[nombre] = base
 
         mejor = max(scores, key=lambda k: scores[k])
         return mejor if scores[mejor] > 0 else "self"
 
-    def vincular(self, neurona: Neurona) -> str:
+    def vincular(self, neurona: Neurona, perfil=None) -> str:
         """Clasifica la neurona y escribe el campo arquetipo_vinculado en su metadata."""
-        arquetipo = self.clasificar(neurona)
+        arquetipo = self.clasificar(neurona, perfil=perfil)
         neurona.post.metadata["arquetipo_vinculado"] = f"[[{arquetipo}.md]]"
         return arquetipo

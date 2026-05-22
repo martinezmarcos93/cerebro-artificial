@@ -2,12 +2,14 @@ import os
 import glob
 
 from cerebro.core.etapas import EstadoSensoriomotor
+from cerebro.perfil.perfil_cognitivo import PerfilCognitivo
 
 
 class Cerebro:
     def __init__(self, vault_path="vault"):
         self.vault_path = vault_path
         os.makedirs(self.vault_path, exist_ok=True)
+        self.perfil = self._cargar_perfil()
         self.contador_ids = self._inicializar_contador()
 
         if self.contador_ids > 3:
@@ -15,6 +17,14 @@ class Cerebro:
             self.etapa_actual = EstadoPreoperacional(self)
         else:
             self.etapa_actual = EstadoSensoriomotor(self)
+
+    def _cargar_perfil(self) -> PerfilCognitivo:
+        path = os.path.join(self.vault_path, "perfil_cognitivo.yaml")
+        return PerfilCognitivo(path=path)
+
+    def guardar_perfil(self) -> None:
+        path = os.path.join(self.vault_path, "perfil_cognitivo.yaml")
+        self.perfil.guardar(path)
 
     def _inicializar_contador(self):
         archivos = glob.glob(os.path.join(self.vault_path, "*.md"))

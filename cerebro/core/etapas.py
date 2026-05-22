@@ -94,7 +94,8 @@ class EstadoPreoperacional(EtapaPiagetiana):
             neurona.post.metadata["significados_diferenciales"] = ["agarrar_fuego"]
 
         neurona.post.content = f"# {significante}\n\nSímbolo creado en etapa preoperacional."
-        arquetipo = self.motor_jung.vincular(neurona)
+        perfil = getattr(self.cerebro, "perfil", None)
+        arquetipo = self.motor_jung.vincular(neurona, perfil=perfil)
         self.cerebro.guardar_neurona(neurona)
         print(f"[Preoperacional] Nuevo símbolo creado: {significante}.md (arquetipo: {arquetipo})")
         self.motor.procesar_nacimiento(neurona)
@@ -102,8 +103,10 @@ class EstadoPreoperacional(EtapaPiagetiana):
 
     def _verificar_transicion(self):
         conflictos = self.cerebro._contar_por_tipo("conflicto")
-        if conflictos >= 2:
-            print("[Transición] Conflictos acumulados → Operaciones Concretas.")
+        perfil = getattr(self.cerebro, "perfil", None)
+        umbral = perfil.umbral_conflictos() if perfil else 2
+        if conflictos >= umbral:
+            print("[Transicion] Conflictos acumulados -> Operaciones Concretas.")
             self.cerebro.cambiar_etapa(EstadoOperacionesConcretas(self.cerebro))
 
 
@@ -143,7 +146,8 @@ class EstadoOperacionesConcretas(EtapaPiagetiana):
             f"- **tiene:** *(pendiente de clasificar)*"
         )
 
-        arquetipo = self.motor_jung.vincular(neurona)
+        perfil = getattr(self.cerebro, "perfil", None)
+        arquetipo = self.motor_jung.vincular(neurona, perfil=perfil)
         self.cerebro.guardar_neurona(neurona)
         print(f"[Operaciones Concretas] Nuevo concepto: {significante}.md (arquetipo: {arquetipo})")
         self.motor.procesar_nacimiento(neurona)
@@ -151,8 +155,10 @@ class EstadoOperacionesConcretas(EtapaPiagetiana):
 
     def _verificar_transicion(self):
         conceptos = self.cerebro._contar_por_tipo("concepto")
-        if conceptos >= 3:
-            print("[Transición] Razonamiento abstracto disponible → Operaciones Formales.")
+        perfil = getattr(self.cerebro, "perfil", None)
+        umbral = perfil.umbral_conceptos() if perfil else 3
+        if conceptos >= umbral:
+            print("[Transicion] Razonamiento abstracto disponible -> Operaciones Formales.")
             self.cerebro.cambiar_etapa(EstadoOperacionesFormales(self.cerebro))
 
 

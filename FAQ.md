@@ -193,6 +193,57 @@ El sistema lo registra en el log del Yo y en el campo `arquetipo_vinculado` de c
 
 ---
 
+### 21. ¿Qué es el perfil cognitivo y por qué existe?
+
+El perfil cognitivo resuelve el problema de la teleología: sin un principio organizador, el cerebro crece pero no *hacia* ningún lugar. En vez de fijar un objetivo rígido ("quiero que sea un científico"), el perfil define **tensiones evolutivas** — 10 ejes de intensidad que inclinan el comportamiento del motor sin determinarlo.
+
+Los ejes son: `abstraccion`, `adaptabilidad`, `dominio_social`, `exploracion`, `estabilidad`, `creatividad`, `supervivencia`, `trascendencia`, `especializacion`, `integracion`.
+
+Cada eje influye en tres puntos concretos del motor:
+- **Ello**: qué neuronas propone con más frecuencia (alta `creatividad` → favorece neuronas con tags de simbolo, metáfora, analogía)
+- **Motor junguiano**: qué arquetipo "gana" cuando hay empate de score (alta `supervivencia` → amplifica sombra y héroe)
+- **Umbrales de transición**: cuántos conflictos o conceptos se necesitan para madurar de etapa (alta `adaptabilidad` → basta 1 conflicto para pasar a Operaciones Concretas; alta `abstraccion` → basta 2 conceptos para pasar a Operaciones Formales)
+
+Con 10 ejes continuos existen miles de perfiles emergentes distintos, sin necesidad de presets rígidos.
+
+---
+
+### 22. ¿Qué son las unidades pedagógicas y los tipos de transformación?
+
+Una **unidad pedagógica** no es un dato: es una *transformación cognitiva* con metadatos que describen qué tipo de cambio produce en el grafo. En vez de "enseñarle que el fuego es caliente", le enseñás "una contradicción sobre el fuego respecto al agua, con dificultad 0.3, en el dominio de supervivencia".
+
+Los 10 tipos de transformación y qué producen:
+
+| Tipo | Qué produce | Etapa mínima |
+|---|---|---|
+| Asociación | Enlace entre dos conceptos | Preoperacional |
+| Contradicción | Neurona de conflicto | Preoperacional |
+| Metáfora | Símbolo con significado transferido | Preoperacional |
+| Analogía | Concepto por semejanza estructural | Operaciones Concretas |
+| Jerarquía | Concepto con `es_un` / `tiene` | Operaciones Concretas |
+| Excepción | Regla que rompe un patrón | Operaciones Concretas |
+| Secuencia | Concepto de causalidad temporal | Operaciones Concretas |
+| Agente | Concepto con teoría de la mente | Operaciones Concretas |
+| Paradoja | Regla que fuerza abstracción formal | Operaciones Formales |
+| Ciclo | Regla de sistema que vuelve al origen | Operaciones Formales |
+
+Desde el dashboard (tab **Entrenamiento**) podés enviar estímulos seleccionando el tipo de transformación sin necesidad de terminal.
+
+---
+
+### 23. ¿Cómo funciona el currículo dinámico?
+
+El `CurriculoDinamico` analiza el estado actual del vault y devuelve recomendaciones concretas sobre qué enseñarle al cerebro. No prescribe contenido: recomienda *tipos de transformación* que el cerebro necesita según su etapa, su perfil y lo que ya tiene.
+
+El proceso es:
+1. **Detecta carencias**: compara lo que hay contra lo que el perfil y la etapa requieren. Ejemplos: `sin_conflictos`, `sin_jerarquias`, `creatividad_subdesarrollada`, `poca_tension_supervivencia`.
+2. **Genera recomendaciones** ordenadas por urgencia, cada una con ejemplos de comandos listos para copiar.
+3. **Detecta necesidades emergentes**: lo que el propio grafo "pide" sin que el usuario lo haya pedido. Ejemplo: si hay más de 3 conflictos sin resolver, el sistema detecta que el cerebro "busca integración". Si hay muchos símbolos sin categorizar, "busca estructura jerárquica".
+
+Este tercer punto es la teleología emergente: la dirección de desarrollo nace del propio sistema, coherente con Piaget (desequilibrio → acomodación) y con Jung (tensión → integración).
+
+---
+
 ### 20. ¿Hacia dónde puede evolucionar el proyecto?
 
 Líneas abiertas con fundamento en la arquitectura actual:

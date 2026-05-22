@@ -26,6 +26,7 @@ class Ello:
         origen_path = os.path.abspath(neurona_origen.filepath or "")
         candidatos = []
 
+        perfil = getattr(self.cerebro, "perfil", None)
         for path in archivos:
             if os.path.abspath(path) == origen_path:
                 continue
@@ -33,7 +34,8 @@ class Ello:
                 n = Neurona.load(path)
                 energia = float(n.post.metadata.get("estado_energetico", 0))
                 novedad = 1.0 / (1.0 + self._grado(n))
-                score = energia + novedad
+                boost = perfil.boost_ello(n) if perfil else 0.0
+                score = energia + novedad + boost
                 candidatos.append((n, score))
             except Exception:
                 pass

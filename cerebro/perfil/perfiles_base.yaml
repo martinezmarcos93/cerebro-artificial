@@ -1,0 +1,62 @@
+# Semillas cognitivas predefinidas.
+# No son presets rígidos: son puntos de partida para la emergencia.
+
+filosofo:
+  abstraccion: 0.95
+  adaptabilidad: 0.80
+  creatividad: 0.85
+  dominio_social: 0.50
+  especializacion: 0.40
+  estabilidad: 0.20
+  exploracion: 0.90
+  integracion: 0.70
+  supervivencia: 0.20
+  trascendencia: 0.80
+
+estratega:
+  abstraccion: 0.60
+  adaptabilidad: 0.85
+  creatividad: 0.50
+  dominio_social: 0.90
+  especializacion: 0.75
+  estabilidad: 0.70
+  exploracion: 0.50
+  integracion: 0.60
+  supervivencia: 0.85
+  trascendencia: 0.30
+
+mistico:
+  abstraccion: 0.70
+  adaptabilidad: 0.60
+  creatividad: 0.90
+  dominio_social: 0.50
+  especializacion: 0.30
+  estabilidad: 0.40
+  exploracion: 0.85
+  integracion: 0.90
+  supervivencia: 0.30
+  trascendencia: 0.95
+
+cientifico:
+  abstraccion: 0.80
+  adaptabilidad: 0.50
+  creatividad: 0.40
+  dominio_social: 0.40
+  especializacion: 0.95
+  estabilidad: 0.90
+  exploracion: 0.70
+  integracion: 0.50
+  supervivencia: 0.40
+  trascendencia: 0.20
+
+superviviente:
+  abstraccion: 0.30
+  adaptabilidad: 0.90
+  creatividad: 0.50
+  dominio_social: 0.70
+  especializacion: 0.50
+  estabilidad: 0.50
+  exploracion: 0.40
+  integracion: 0.40
+  supervivencia: 0.95
+  trascendencia: 0.20

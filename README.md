@@ -193,6 +193,12 @@ cerebro-artificial/
 │   ├── jung/
 │   │   ├── motor_junguiano.py     # clasificación por vocabulario arquetípico
 │   │   └── experimento_ab.py      # comparación cerebro A vs B
+│   ├── perfil/
+│   │   ├── perfil_cognitivo.py    # 10 ejes de desarrollo (teleología del cerebro)
+│   │   └── perfiles_base.yaml     # semillas: filósofo, estratega, místico, científico, superviviente
+│   ├── pedagogy/
+│   │   ├── unidad_pedagogica.py   # 10 tipos de transformación cognitiva
+│   │   └── curriculo.py           # análisis de carencias + recomendaciones dinámicas
 │   ├── dashboard/
 │   │   └── app.py                 # Streamlit — observabilidad en tiempo real
 │   └── watcher.py                 # watchdog — reacciona a cambios en el vault
@@ -204,17 +210,19 @@ cerebro-artificial/
 │   └── experimento_ab_cli.py
 │
 ├── vault/                         # memoria viva (Obsidian vault)
-│   └── arquetipos/
-│       ├── madre.md
-│       ├── heroe.md
-│       ├── sombra.md
-│       └── self.md
+│   ├── arquetipos/
+│   │   ├── madre.md
+│   │   ├── heroe.md
+│   │   ├── sombra.md
+│   │   └── self.md
+│   └── perfil_cognitivo.yaml      # ejes del cerebro (se crea al primer arranque)
 │
 ├── tests/
 │   ├── test_fase1.py              # CRUD, validación, transición sensoriomotora
 │   ├── test_fase2.py              # Ello, Superyó, Yo, watcher
 │   ├── test_fase3.py              # Indexador, Razonador, RAG, etapa formal
-│   └── test_fase4.py              # motor junguiano, experimento A/B
+│   ├── test_fase4.py              # motor junguiano, experimento A/B
+│   └── test_fase6.py              # perfil cognitivo, pedagogía, currículo
 │
 └── docs/
     ├── cerebro_artificial.md      # visión y arquitectura teórica completa
@@ -291,6 +299,36 @@ tags: [batallar, resistir, perseverar]
 El héroe persevera donde otros abandonan...
 ```
 
+### Definir el perfil cognitivo (teleología)
+
+El perfil cognitivo es la "intención de desarrollo" del cerebro. Se configura con 10 ejes (0.0–1.0) que influyen en qué acepta, qué conecta y a qué velocidad madura.
+
+Desde el dashboard (tab **Perfil Cognitivo**) o editando `vault/perfil_cognitivo.yaml` directamente:
+
+```yaml
+perfil_cognitivo:
+  abstraccion: 0.9      # pensamiento simbólico y conceptual
+  adaptabilidad: 0.8    # plasticidad ante contradicciones
+  creatividad: 0.85     # conexiones improbables
+  dominio_social: 0.5
+  especializacion: 0.4
+  estabilidad: 0.2      # baja → tolera más conflicto
+  exploracion: 0.9
+  integracion: 0.7
+  supervivencia: 0.2
+  trascendencia: 0.8
+```
+
+Semillas predefinidas (aplicables desde el dashboard):
+
+| Semilla | Dominante | Carácter |
+|---|---|---|
+| **Filósofo** | abstraccion + exploracion | Busca paradojas y contradicciones |
+| **Estratega** | supervivencia + dominio_social | Prioriza jerarquías y agentes |
+| **Místico** | trascendencia + integracion | Busca metáforas y ciclos |
+| **Científico** | estabilidad + especializacion | Rechaza ambigüedad, busca coherencia |
+| **Superviviente** | supervivencia + adaptabilidad | Prioriza amenazas y recursos |
+
 ### Cambiar el vault
 
 ```bash
@@ -304,7 +342,7 @@ python main.py --vault /ruta/a/mi/vault dashboard
 
 ```bash
 pytest tests/ -v
-# 103 tests — fases 1 a 4
+# 132 tests — fases 1, 2, 3, 4 y 6
 ```
 
 ---
@@ -318,7 +356,8 @@ pytest tests/ -v
 | 3 — RAG | ✅ Completa | Indexador, Razonador, ComunicadorRAG, etapa formal |
 | 4 — Jung | ✅ Completa | Motor junguiano, experimento A/B |
 | 5 — Observabilidad | ✅ Completa | Dashboard Streamlit, log del Yo |
-| 6 — Futuro | 🔲 Pendiente | Persistencia vectorial, multi-vault, voz |
+| 6 — Teleología | ✅ Completa | Perfil cognitivo, pedagogía, currículo dinámico |
+| 7 — Futuro | 🔲 Pendiente | Persistencia vectorial, multi-vault, voz |
 
 ---
 
