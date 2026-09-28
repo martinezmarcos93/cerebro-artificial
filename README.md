@@ -16,7 +16,7 @@ Inspirado en cuatro tradiciones teóricas:
 ## Inicio rápido
 
 ```bash
-git clone https://github.com/tu-usuario/cerebro-artificial.git
+git clone https://github.com/martinezmarcos93/cerebro-artificial.git
 cd cerebro-artificial
 
 pip install -r requirements.txt
@@ -235,7 +235,7 @@ cerebro-artificial/
 
 ```bash
 # 1. Clonar el repo
-git clone https://github.com/tu-usuario/cerebro-artificial.git
+git clone https://github.com/martinezmarcos93/cerebro-artificial.git
 cd cerebro-artificial
 
 # 2. Crear entorno virtual (recomendado)
